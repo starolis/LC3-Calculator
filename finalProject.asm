@@ -10,7 +10,7 @@ ContProgram
       ST R0, num_R
 
       ; Get first number
-      LEA R0, prompt1
+      ___________________
       PUTS
       JSR ReadInput
       LD R1, num_temp
@@ -21,7 +21,7 @@ ContProgram
       ST R0, num_temp
 
       ; Get second number
-      LEA R0, prompt2
+      ___________________
       PUTS
       JSR ReadInput
       LD R2, num_temp
@@ -31,7 +31,7 @@ ContProgram
       ST R0, num_temp
       ; prompt for operator
       LEA R0, prompt3
-      PUTS
+      ___________________
       ; get operator
       GETC                  ; Character is stored in R0
       OUT
@@ -42,19 +42,19 @@ ContProgram
 
       LDR R3, R5, #0        ; loads first symbol from R7 into R3
       ADD R4, R0, R3        ; add contents of R0 (user input) and R3
-      BRz Addition
+      ___________________
 
       LDR R3, R5, #1
       ADD R4, R0, R3
-      BRz Subtract
+      ___________________
 
       LDR R3, R5, #2
       ADD R4, R0, R3
-      BRz Multiply
+      ___________________
 
       LDR R3, R5, #3
       ADD R4, R0, R3
-      BRz DivisionF
+      ___________________
 
 OpComplete
       LEA R0, result1
@@ -100,7 +100,7 @@ ReadInput
   AND R4, R4, #0          ; init R4 to 0
   AND R5, R5, #0          ; init R5 to 0
   LoopReadInput GETC
-    ADD R6, R0, #-10      ; check for return key
+    ___________________   ; check for return key
     BRz DoneReadInput
     OUT                   ; print character to screen
     STR R0, R3, #0        ; store char into inputArray
@@ -108,7 +108,7 @@ ReadInput
     ST R4, inputSize      ; store R4 into inputSize variable
     ADD R3, R3, #1        ; inc++ array index
     ADD R5, R4, #-4       ; stop when 4 char long
-    BRn LoopReadInput     ; loop back for next character
+    ___ LoopReadInput     ; loop back for next character
   DoneReadInput
     LEA R3, inputArray    ; R3 <- pointer to inputArray
     LEA R4, constArray    ; R4 <- pointer to constArray
@@ -119,7 +119,7 @@ ReadInput
     LDR R1, R3, #0        ; load ASCII digit from inputArray
     ADD R1, R1, R5        ; R1 <- contains integer
     ADD R2, R4, R6        ; R2 <- contins address of constant
-    LDR R2, R2, #0        ; R2 <- load the number from the arrary
+    LDR R2, R2, #0        ; R2 <- load the number from the array
     JSR ReadInputExpand   ; R1 <- Integer, R2 <- Constant
     LD R1, num_R          ; Load mult result into R1
     LD R0, num_temp       ; Load the current num into R0
@@ -127,7 +127,7 @@ ReadInput
     ST R0, num_temp       ; Store the sum back into the temp num
     ADD R3, R3, #1        ; increment pointer in inputArray
     ADD R6, R6, #-1       ; decrement size
-    BRzp LoopReadInput2   ; loop back and continue to multiply out
+    ___ LoopReadInput2   ; loop back and continue to multiply out
   LD R7, saveR7
   RET
 
@@ -141,7 +141,7 @@ ReadInputExpand
   AND R4, R4, #0
   ADD R4, R4, R2  ; duplicate R2 so it remains unchanged
   Mult
-    ADD R6, R6, R1
+    ___________________
     ADD R4, R4, #-1
   BRp Mult
   ST R6, num_R
@@ -177,7 +177,7 @@ NumToASCII ; prints number in R1
     ADD R6, R6, #1        ; increment index at R6
     ADD R3, R3, #0        ; break on R3 (size)
     ST R5, num_R
-    BRp Convert_Loop
+    ___ Convert_Loop
   ADD R0, R0, #0
   ST R0, outputSize
   LD R7, saveR7
@@ -186,11 +186,11 @@ NumToASCII ; prints number in R1
 plus30        .FILL     x30
 
 Addition
-  ADD R6, R2, R1
+  ADD ___________________
   JSR OpComplete
 
 Subtract
-  NOT R2, R2
+  ___________________
   ADD R2, R2, #1
   ADD R6, R1, R2
   JSR OpComplete
@@ -200,7 +200,7 @@ Multiply
   AND R3, R3, #0  ; init Y
   ADD R3, R2, #0  ; add Y to R3
   Mul
-    ADD R6, R6, R1
+    ___________________
     ADD R3, R3, #-1
   Brp Mul
   JSR OpComplete
@@ -219,7 +219,7 @@ Division
   ADD R4, R4, #1  ; Invert R4
   Div
     ADD R3, R3, R4  ; X = X - Y
-    BRn EndDiv
+    ___ EndDiv
     ADD R6, R6, #1
     ST R3, num_remainder
     Br Div
@@ -231,7 +231,7 @@ printNeg
   ST R7, saveR7
   NOT R6, R6
   ADD R6, R6, #1
-  LEA R0, negSym
+  ___________________
   PUTS
   LD R7, saveR7
   RET
@@ -255,7 +255,7 @@ DetermineSize
     ADD R6, R6, #0        ; make R6 relative
     BRp SizeDetermined    ; if positive, we found size!
     ADD R4, R4, #-1       ; else decrement index
-    BRnzp DetermineSizeLoop   ; try again
+    ___ DetermineSizeLoop   ; try again
   SizeDetermined
     ADD R4, R4, #1        ; size = index + 1
     ST R4, outputSize
@@ -286,11 +286,11 @@ ClearOutputArray
   RET
 size5         .FILL     #5
 
-constArray    .FILL     #1
-              .FILL     #10
-              .FILL     #100
-              .FILL     #1000
-              .FILL     #10000
+constArray    .FILL     ___________________
+              .FILL     ___________________
+              .FILL     ___________________
+              .FILL     ___________________
+              .FILL     ___________________
 num_remainder .FILL     #0
 inputSize     .FILL     #0
 convert_quot  .FILL     #0
