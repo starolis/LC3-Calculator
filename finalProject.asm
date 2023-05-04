@@ -10,7 +10,7 @@ ContProgram
       ST R0, num_R
 
       ; Get first number
-      ___________________
+      LEA R0 prompt1
       PUTS
       JSR ReadInput
       LD R1, num_temp
@@ -21,7 +21,7 @@ ContProgram
       ST R0, num_temp
 
       ; Get second number
-      ___________________
+      LEA R0 prompt2
       PUTS
       JSR ReadInput
       LD R2, num_temp
@@ -31,7 +31,7 @@ ContProgram
       ST R0, num_temp
       ; prompt for operator
       LEA R0, prompt3
-      ___________________
+      PUTS
       ; get operator
       GETC                  ; Character is stored in R0
       OUT
@@ -42,19 +42,19 @@ ContProgram
 
       LDR R3, R5, #0        ; loads first symbol from R7 into R3
       ADD R4, R0, R3        ; add contents of R0 (user input) and R3
-      ___________________
+      BRz Addition
 
       LDR R3, R5, #1
       ADD R4, R0, R3
-      ___________________
+      BRz Subtract
 
       LDR R3, R5, #2
       ADD R4, R0, R3
-      ___________________
+      Brz Multiply
 
       LDR R3, R5, #3
       ADD R4, R0, R3
-      ___________________
+      BRz DivisionF
 
 OpComplete
       LEA R0, result1
@@ -100,7 +100,7 @@ ReadInput
   AND R4, R4, #0          ; init R4 to 0
   AND R5, R5, #0          ; init R5 to 0
   LoopReadInput GETC
-    ___________________   ; check for return key
+    ADD R0 R0 #0          ; check for return key
     BRz DoneReadInput
     OUT                   ; print character to screen
     STR R0, R3, #0        ; store char into inputArray
@@ -108,7 +108,7 @@ ReadInput
     ST R4, inputSize      ; store R4 into inputSize variable
     ADD R3, R3, #1        ; inc++ array index
     ADD R5, R4, #-4       ; stop when 4 char long
-    ___ LoopReadInput     ; loop back for next character
+    BRnz LoopReadInput     ; loop back for next character
   DoneReadInput
     LEA R3, inputArray    ; R3 <- pointer to inputArray
     LEA R4, constArray    ; R4 <- pointer to constArray
